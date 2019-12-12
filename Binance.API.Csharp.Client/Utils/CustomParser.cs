@@ -3,6 +3,7 @@ using Binance.API.Csharp.Client.Models.WebSocket;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace Binance.API.Csharp.Client.Utils
 {
@@ -50,22 +51,23 @@ namespace Binance.API.Csharp.Client.Utils
         public IEnumerable<Candlestick> GetParsedCandlestick(dynamic candlestickData)
         {
             var result = new List<Candlestick>();
-
+            var style = NumberStyles.AllowDecimalPoints | NumberStyles.AllowThousands;
+            var provider = CultureInfo.InvariantCulture;
             foreach (JToken item in ((JArray)candlestickData).ToArray())
             {
                 result.Add(new Candlestick()
                 {
                     OpenTime = long.Parse(item[0].ToString()),
-                    Open = decimal.Parse(item[1].ToString()),
-                    High = decimal.Parse(item[2].ToString()),
-                    Low = decimal.Parse(item[3].ToString()),
-                    Close = decimal.Parse(item[4].ToString()),
-                    Volume = decimal.Parse(item[5].ToString()),
+                    Open = decimal.Parse(item[1].ToString(), style, provider),
+                    High = decimal.Parse(item[2].ToString(), style, provider),
+                    Low = decimal.Parse(item[3].ToString(), style, provider),
+                    Close = decimal.Parse(item[4].ToString(), style, provider),
+                    Volume = decimal.Parse(item[5].ToString(), style, provider),
                     CloseTime = long.Parse(item[6].ToString()),
-                    QuoteAssetVolume = decimal.Parse(item[7].ToString()),
+                    QuoteAssetVolume = decimal.Parse(item[7].ToString(), style, provider),
                     NumberOfTrades = int.Parse(item[8].ToString()),
-                    TakerBuyBaseAssetVolume = decimal.Parse(item[9].ToString()),
-                    TakerBuyQuoteAssetVolume = decimal.Parse(item[10].ToString())
+                    TakerBuyBaseAssetVolume = decimal.Parse(item[9].ToString(), style, provider),
+                    TakerBuyQuoteAssetVolume = decimal.Parse(item[10].ToString(),style, provider)
                 });
             }
 
